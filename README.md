@@ -15,6 +15,7 @@ The Customer Success team, managed by Ramzi needs an application to manage and f
 * Install the project and let it work on your development environment.
 * Find bugs, create issues, then debug the app.
 * Have some ideas to complete the app, create issues, and, if possible, push some codes to close them !
+* Try to understand and respect the coding standards
   
 **Don't try to close all your improvement issues**. Some ambitious ideas deserve to remain pending documented issues.
   
@@ -31,10 +32,11 @@ The Customer Success team, managed by Ramzi needs an application to manage and f
 
 ## Requirements
 
-* PHP 7
+* PHP 7.4
 * Composer
 * Git
 * PostgreSQL
+* Symfony CLI
 
 ## Installation
 
@@ -43,5 +45,10 @@ Then, execute those scripts :
 
     composer install
     bin/console doctrine:database:create
-    bin/console doctrine:migrations:migrate --allow-no-migration --no-interaction
+    bin/console doctrine:migrations:migrate
+    bin/console doctrine:fixtures:load
     bin/phpunit
+    symfony serve
+
+You can now login to the app. _Just find how ..._
+
