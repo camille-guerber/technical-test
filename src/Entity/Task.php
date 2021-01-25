@@ -51,6 +51,10 @@ class Task
         $this->createdAt = new \DateTime();
     }
 
+    public function __toString(): string {
+        return $this->getLabel();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

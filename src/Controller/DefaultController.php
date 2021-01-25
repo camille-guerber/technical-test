@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\TaskRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,15 +15,22 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class DefaultController extends AbstractController
 {
     private AuthenticationUtils $authenticationUtils;
+    /**
+     * @var TaskRepository
+     */
+    private TaskRepository $taskRepository;
 
     /**
      * @param AuthenticationUtils $authenticationUtils
+     * @param TaskRepository $taskRepository
      */
     public function __construct(
-        AuthenticationUtils $authenticationUtils
+        AuthenticationUtils $authenticationUtils,
+        TaskRepository $taskRepository
     )
     {
         $this->authenticationUtils = $authenticationUtils;
+        $this->taskRepository = $taskRepository;
     }
 
     /**
@@ -30,12 +38,34 @@ class DefaultController extends AbstractController
      */
     public function index(): Response
     {
+        $stats = [
+            'opened' => 0,
+            'unassigned' => 0,
+            'owned' => 0
+        ];
+
         $error = $this->authenticationUtils->getLastAuthenticationError();
         $lastUsername = $this->authenticationUtils->getLastUsername();
 
+        if($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $stats['opened'] = $this->taskRepository->count([
+                'closed' => false
+            ]);
+
+            $stats['unassigned'] = $this->taskRepository->count([
+                'user' => null
+            ]);
+
+            $stats['owned'] = $this->taskRepository->count([
+                'closed' => false,
+                'user' => $this->getUser()
+            ]);
+        }
+
         return $this->render('default/index.html.twig', [
             'error' => $error,
-            'lastUsername' => $lastUsername
+            'lastUsername' => $lastUsername,
+            'stats' => $stats
         ]);
     }
 

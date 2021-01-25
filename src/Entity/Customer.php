@@ -27,11 +27,15 @@ class Customer
     /**
      * @ORM\OneToMany(targetEntity=Task::class, mappedBy="customer")
      */
-    private $tasks;
+    private Collection $tasks;
 
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
+    }
+
+    public function __toString(): string {
+        return $this->getLabel();
     }
 
     public function getId(): ?int

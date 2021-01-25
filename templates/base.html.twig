@@ -63,7 +63,7 @@
                                 </a>
                             </li>
                             <li class="nav-item {{ app.request.get('_route') starts with 'task' ? 'active' }}">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link" href="{{ path('task') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <i class="fas fa-tasks"></i>
                                     </span>
@@ -72,8 +72,8 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ app.request.get('_route') starts with 'task' ? 'active' }}">
-                                <a class="nav-link" href="#">
+                            <li class="nav-item {{ app.request.get('_route') starts with 'customer' ? 'active' }}">
+                                <a class="nav-link" href="{{ path('customer') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <i class="fas fa-building"></i>
                                     </span>
@@ -82,7 +82,7 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ app.request.get('_route') starts with 'task' ? 'active' }}">
+                            <li class="nav-item {{ app.request.get('_route') starts with 'user' ? 'active' }}">
                                 <a class="nav-link" href="#">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <i class="fas fa-user-tie"></i>
@@ -100,6 +100,14 @@
     {% endif %}
     <div class="content">
         <div class="container-xl">
+            {% for label, flashes in app.session.flashbag.all %}
+                {% for flash in flashes %}
+                    <div class="alert alert-{{ label }}">
+                        {{ flash | trans }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
             {% block body %}{% endblock %}
         </div>
     </div>
