@@ -13,13 +13,9 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
  */
 class DefaultController extends AbstractController
 {
-    /**
-     * @var AuthenticationUtils
-     */
     private AuthenticationUtils $authenticationUtils;
 
     /**
-     * DefaultController constructor.
      * @param AuthenticationUtils $authenticationUtils
      */
     public function __construct(
@@ -31,7 +27,6 @@ class DefaultController extends AbstractController
 
     /**
      * @Route("", name="home")
-     * @return Response
      */
     public function index(): Response
     {

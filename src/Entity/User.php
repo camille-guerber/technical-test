@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -14,7 +16,7 @@ class User implements UserInterface
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     private int $id;
@@ -30,22 +32,29 @@ class User implements UserInterface
     private array $roles = [];
 
     /**
-     * @var string|null The hashed password
      * @ORM\Column(type="string")
      */
     private ?string $password = null;
 
     /**
-     * @var string|null
      * @ORM\Column(type="string")
      */
     private ?string $firstname = null;
 
     /**
-     * @var string|null
      * @ORM\Column(type="string")
      */
     private ?string $lastname = null;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="user")
+     */
+    private Collection $tasks;
+
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -64,23 +73,14 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUsername(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -93,9 +93,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getPassword(): string
     {
         return (string) $this->password;
@@ -108,52 +105,64 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getSalt()
     {
         // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
 
-    /**
-     * @return string|null
-     */
     public function getFirstname(): ?string
     {
         return $this->firstname;
     }
 
-    /**
-     * @param string|null $firstname
-     */
     public function setFirstname(?string $firstname): void
     {
         $this->firstname = ucfirst($firstname);
     }
 
-    /**
-     * @return string|null
-     */
     public function getLastname(): ?string
     {
         return $this->lastname;
     }
 
-    /**
-     * @param string|null $lastname
-     */
     public function setLastname(?string $lastname): void
     {
         $this->lastname = strtoupper($lastname);
+    }
+
+    /**
+     * @return Collection|Task[]
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task): self
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks[] = $task;
+            $task->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): self
+    {
+        if ($this->tasks->removeElement($task)) {
+            // set the owning side to null (unless already changed)
+            if ($task->getUser() === $this) {
+                $task->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
