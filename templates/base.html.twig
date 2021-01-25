@@ -83,7 +83,7 @@
                                 </a>
                             </li>
                             <li class="nav-item {{ app.request.get('_route') starts with 'user' ? 'active' }}">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link" href="{{ path('user') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <i class="fas fa-user-tie"></i>
                                     </span>

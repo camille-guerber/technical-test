@@ -6,6 +6,7 @@ use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -43,5 +44,21 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newEncodedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
+    }
+
+    /**
+     * @param int $page
+     * @return Paginator|User[]
+     */
+    public function pagination(int $page = 1): Paginator {
+        $dql = $this->createQueryBuilder('user');
+
+        $dql->orderBy('user.lastname', 'ASC');
+
+        $query = $dql->getQuery();
+        $query->setMaxResults(10);
+        $query->setFirstResult(($page - 1) * 10);
+
+        return new Paginator($query);
     }
 }
