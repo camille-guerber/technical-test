@@ -23,6 +23,8 @@ class DefaultControllerTest extends WebTestCase
             'password' => 'VerySecretPassword'
         ]);
 
+        $client->followRedirect();
+
         $this->assertStringContainsString('Dashboard', $client->getResponse()->getContent());
     }
 
@@ -39,7 +41,9 @@ class DefaultControllerTest extends WebTestCase
             'password' => 'VerySecretPassword'
         ]);
 
-        $this->assertStringContainsString('Dashboard', $client->getResponse()->getContent());
+        $client->followRedirect();
+
+        $this->assertStringNotContainsString('Thibault Henry', $client->getResponse()->getContent());
     }
 
     public function testPasswordFailed() {
@@ -55,6 +59,8 @@ class DefaultControllerTest extends WebTestCase
             'password' => 'NotTheRightPassword'
         ]);
 
-        $this->assertStringContainsString('Dashboard', $client->getResponse()->getContent());
+        $client->followRedirect();
+
+        $this->assertStringNotContainsString('Thibault Henry', $client->getResponse()->getContent());
     }
 }

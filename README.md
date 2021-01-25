@@ -41,6 +41,8 @@ The Customer Success team, managed by Ramzi needs an application to manage and f
 ## Installation
 
 First, copy the `.env` file to `.env.local`. Complete your `env.local` file with your own environment variables.
+Copy `.env.local` to `.env.test.local` to enable tests.
+
 Then, execute those scripts :
 
     composer install

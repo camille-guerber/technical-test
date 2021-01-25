@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -19,6 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class UserController
  * @package App\Controller
  * @Route("/user")
+ * @IsGranted("IS_AUTHENTICATED_FULLY")
  */
 class UserController extends AbstractController
 {
