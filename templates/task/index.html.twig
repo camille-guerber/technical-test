@@ -29,9 +29,21 @@
             <tbody>
                 {% for task in tasks %}
                     <tr>
-                        <td>{{ task.user | default('--') }}</td>
+                        <td>
+                            {% if task.user is not null %}
+                                <a href="{{ path('user_edit', {'user': task.user.id}) }}" class="text-muted">
+                                    {{ task.user }}
+                                </a>
+                            {% else %}
+                                {{ '--' }}
+                            {% endif %}
+                        </td>
                         <td>{{ task.label }}</td>
-                        <td>{{ task.customer }}</td>
+                        <td>
+                            <a href="{{ path('customer_edit', {'customer': task.customer.id}) }}" class="text-muted">
+                                {{ task.customer }}
+                            </a>
+                        </td>
                         <td>{{ task.createdAt | date('d/m/Y') }}</td>
                         <td>{{ task.closedAt ? (task.closedAt | date('d/m/Y')) : '--' }}</td>
                         <td class="text-right">
