@@ -1,3 +1,5 @@
+# Please fork this project to make your work invisible to other candidates :)
+
 # Technical test
 
 Hello there !
