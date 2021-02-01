@@ -124,4 +124,52 @@ class TaskController extends AbstractController
         $this->addFlash('success', "The task has been completed");
         return $this->redirectToRoute('task');
     }
+
+    /**
+     * @Route("/task/opened", name="opened_tasks")
+     * @param Request $request
+     * @return Response
+     */
+    public function opened_tasks(Request $request): Response
+    {
+        $tasks = $this->taskRepository->getOpenedTasks(
+            $request->query->getInt('page', 1)
+        );
+
+        return $this->render('task/opened_tasks.html.twig', [
+            'tasks' => $tasks,
+        ]);
+    }
+
+    /**
+     * @Route("/task/unassigned", name="unassigned_tasks")
+     * @param Request $request
+     * @return Response
+     */
+    public function unassigned_tasks(Request $request): Response
+    {
+        $tasks = $this->taskRepository->getUnassignedTasks(
+            $request->query->getInt('page', 1)
+        );
+
+        return $this->render('task/unassigned_tasks.html.twig', [
+            'tasks' => $tasks,
+        ]);
+    }
+
+    /**
+     * @Route("/task/owned/opened", name="owned_opened_tasks")
+     * @param Request $request
+     * @return Response
+     */
+    public function owned_opened_tasks(Request $request): Response
+    {
+        $tasks = $this->taskRepository->getOwnedOpenedTasks(
+            $request->query->getInt('page', 1)
+        );
+
+        return $this->render('task/owned_opened_tasks.html.twig', [
+            'tasks' => $tasks,
+        ]);
+    }
 }

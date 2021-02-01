@@ -48,18 +48,11 @@ class DefaultController extends AbstractController
         $lastUsername = $this->authenticationUtils->getLastUsername();
 
         if($this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $stats['opened'] = $this->taskRepository->count([
-                'closed' => false
-            ]);
+            $stats['opened'] = count($this->taskRepository->getOpenedTasks());
 
-            $stats['unassigned'] = $this->taskRepository->count([
-                'user' => null
-            ]);
+            $stats['unassigned'] = count($this->taskRepository->getUnassignedTasks());
 
-            $stats['owned'] = $this->taskRepository->count([
-                'closed' => false,
-                'user' => $this->getUser()
-            ]);
+            $stats['owned'] = count($this->taskRepository->getOwnedOpenedTasks());
         }
 
         return $this->render('default/index.html.twig', [
