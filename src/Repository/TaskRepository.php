@@ -89,4 +89,44 @@ class TaskRepository extends ServiceEntityRepository
 
         return new Paginator($query);
     }
+
+    public function getFilteredTasks(int $page = 1, $filters = null, $unmapped = null) {
+        $dql = $this->createQueryBuilder('task');
+
+        if($filters->getLabel()) {
+            $dql
+                ->andWhere('task.label LIKE :label')
+                ->setParameter('label', '%'.$filters->getLabel().'%')
+            ;
+        }
+
+        if($filters->getUser()) {
+            $dql
+                ->andWhere('task.user = :user')
+                ->setParameter(':user', $filters->getUser())
+            ;
+        }
+
+        if($filters->getCustomer()) {
+            $dql
+                ->andWhere('task.customer = :customer')
+                ->setParameter(':customer', $filters->getCustomer())
+            ;
+        }
+
+        if(isset($unmapped)) {
+            $dql
+                ->andWhere($dql->expr()->eq('task.closed', ':propertyCheck'))
+                ->setParameter(':propertyCheck', $unmapped)
+            ;
+        }
+
+        $dql->orderBy('task.createdAt', 'DESC');
+
+        $query = $dql->getQuery();
+        $query->setMaxResults(10);
+        $query->setFirstResult(($page - 1) * 10);
+
+        return new Paginator($query);
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Entity\Task;
+use App\Form\TaskFilterType;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,17 +36,31 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("", name="task")
+     * @Route("", name="task", methods={"GET", "POST"})
      * @param Request $request
      * @return Response
      */
     public function index(Request $request): Response {
-        $tasks = $this->taskRepository->pagination(
-            $request->query->getInt('page', 1)
-        );
+
+        $query = null;
+
+        $task = new Task();
+
+        $filterForm = $this->createForm(TaskFilterType::class, $task);
+
+        $filterForm->handleRequest($request);
+
+        if($filterForm->isSubmitted()) {
+            if(!empty($filterForm->getData())) {
+                $query = $this->taskRepository->getFilteredTasks($request->query->getInt('page', 1), $filterForm->getData(), $filterForm['status']->getData());
+            }
+        }
+
+        $tasks = $query === null ? $tasks = $this->taskRepository->pagination($request->query->getInt('page', 1)) : $query;
 
         return $this->render('task/index.html.twig', [
-            'tasks' => $tasks
+            'tasks' => $tasks,
+            'filterForm' => $filterForm->createView(),
         ]);
     }
 
