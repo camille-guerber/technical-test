@@ -35,4 +35,58 @@ class TaskRepository extends ServiceEntityRepository
 
         return new Paginator($query);
     }
+
+    /**
+     * @param int $page
+     * @return Paginator
+     */
+    public function getOpenedTasks(int $page = 1): Paginator {
+        $dql = $this->createQueryBuilder('task');
+
+        $dql->where($dql->expr()->eq('task.closed', ':propertyCheck'))
+            ->setParameter(':propertyCheck', false)
+        ;
+
+        $query = $dql->getQuery();
+        $query->setMaxResults(10);
+        $query->setFirstResult(($page - 1) * 10);
+
+        return new Paginator($query);
+    }
+
+    /**
+     * @param int $page
+     * @return Paginator
+     */
+    public function getUnassignedTasks(int $page = 1): Paginator {
+        $dql = $this->createQueryBuilder('task');
+
+        $dql->where('task.user IS NULL')
+            ->orderBy('task.createdAt', 'DESC');
+
+        $query = $dql->getQuery();
+        $query->setMaxResults(10);
+        $query->setFirstResult(($page - 1) * 10);
+
+        return new Paginator($query);
+    }
+
+    /**
+     * @param int $page
+     * @return Paginator
+     */
+    public function getOwnedOpenedTasks(int $page = 1): Paginator {
+        $dql = $this->createQueryBuilder('task');
+
+        $dql->where('task.user IS NOT NULL')
+            ->andWhere($dql->expr()->eq('task.closed', ':propertyCheck'))
+            ->setParameter(':propertyCheck', false)
+            ->orderBy('task.createdAt', 'DESC');
+
+        $query = $dql->getQuery();
+        $query->setMaxResults(10);
+        $query->setFirstResult(($page - 1) * 10);
+
+        return new Paginator($query);
+    }
 }
