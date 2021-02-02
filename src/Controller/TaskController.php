@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Entity\Task;
+use App\Entity\User;
 use App\Form\TaskFilterType;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
@@ -141,7 +142,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/task/opened", name="opened_tasks")
+     * @Route("/opened", name="opened_tasks")
      * @param Request $request
      * @return Response
      */
@@ -157,7 +158,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/task/unassigned", name="unassigned_tasks")
+     * @Route("/unassigned", name="unassigned_tasks")
      * @param Request $request
      * @return Response
      */
@@ -173,7 +174,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/task/owned/opened", name="owned_opened_tasks")
+     * @Route("/owned/opened", name="owned_opened_tasks")
      * @param Request $request
      * @return Response
      */
@@ -184,6 +185,24 @@ class TaskController extends AbstractController
         );
 
         return $this->render('task/owned_opened_tasks.html.twig', [
+            'tasks' => $tasks,
+        ]);
+    }
+
+    /**
+     * @Route("/{user}", name="user_tasks")
+     * @param Request $request
+     * @param User $user
+     */
+    public function user_tasks(Request $request, User $user) :Response {
+        if($this->getUser()->getId() === $user->getId()) {
+            $tasks = $this->taskRepository->getUserTasks($request->query->getInt('page', 1), $user);
+        } else {
+            $this->addFlash('warning', "You are not allowed to access this page.");
+            return $this->redirectToRoute('task');
+        }
+
+        return $this->render('task/user_tasks.html.twig', [
             'tasks' => $tasks,
         ]);
     }
