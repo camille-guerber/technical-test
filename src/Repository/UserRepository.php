@@ -53,6 +53,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function pagination(int $page = 1): Paginator {
         $dql = $this->createQueryBuilder('user');
 
+        $dql
+            ->select(['user', 'tasks'])
+            ->leftJoin('user.tasks', 'tasks')
+        ;
+
         $dql->orderBy('user.lastname', 'ASC');
 
         $query = $dql->getQuery();

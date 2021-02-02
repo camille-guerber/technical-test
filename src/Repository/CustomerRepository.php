@@ -27,6 +27,11 @@ class CustomerRepository extends ServiceEntityRepository
     public function pagination(int $page = 1): Paginator {
         $dql = $this->createQueryBuilder('customer');
 
+        $dql
+            ->select(['customer', 'tasks'])
+            ->leftJoin('customer.tasks', 'tasks')
+        ;
+
         $dql->orderBy('customer.label', 'ASC');
 
         $query = $dql->getQuery();

@@ -28,6 +28,12 @@ class TaskRepository extends ServiceEntityRepository
     public function pagination(int $page = 1): Paginator {
         $dql = $this->createQueryBuilder('task');
 
+        $dql
+            ->select(['task', 'users', 'customers'])
+            ->leftJoin('task.user', 'users')
+            ->leftJoin('task.customer', 'customers')
+        ;
+
         $dql->orderBy('task.createdAt', 'DESC');
 
         $query = $dql->getQuery();
@@ -43,6 +49,12 @@ class TaskRepository extends ServiceEntityRepository
      */
     public function getOpenedTasks(int $page = 1): Paginator {
         $dql = $this->createQueryBuilder('task');
+
+        $dql
+            ->select(['task', 'users', 'customers'])
+            ->leftJoin('task.user', 'users')
+            ->leftJoin('task.customer', 'customers')
+        ;
 
         $dql->where($dql->expr()->eq('task.closed', ':propertyCheck'))
             ->setParameter(':propertyCheck', false)
@@ -62,6 +74,12 @@ class TaskRepository extends ServiceEntityRepository
     public function getUnassignedTasks(int $page = 1): Paginator {
         $dql = $this->createQueryBuilder('task');
 
+        $dql
+            ->select(['task', 'users', 'customers'])
+            ->leftJoin('task.user', 'users')
+            ->leftJoin('task.customer', 'customers')
+        ;
+
         $dql->where('task.user IS NULL')
             ->orderBy('task.createdAt', 'DESC');
 
@@ -79,6 +97,12 @@ class TaskRepository extends ServiceEntityRepository
     public function getOwnedOpenedTasks(int $page = 1): Paginator {
         $dql = $this->createQueryBuilder('task');
 
+        $dql
+            ->select(['task', 'users', 'customers'])
+            ->leftJoin('task.user', 'users')
+            ->leftJoin('task.customer', 'customers')
+        ;
+
         $dql->where('task.user IS NOT NULL')
             ->andWhere($dql->expr()->eq('task.closed', ':propertyCheck'))
             ->setParameter(':propertyCheck', false)
@@ -93,6 +117,12 @@ class TaskRepository extends ServiceEntityRepository
 
     public function getFilteredTasks(int $page = 1, $filters = null, $unmapped = null) {
         $dql = $this->createQueryBuilder('task');
+
+        $dql
+            ->select(['task', 'users', 'customers'])
+            ->leftJoin('task.user', 'users')
+            ->leftJoin('task.customer', 'customers')
+        ;
 
         if($filters->getLabel()) {
             $dql
@@ -138,6 +168,12 @@ class TaskRepository extends ServiceEntityRepository
      */
     public function getUserTasks(int $page = 1, User $user) {
         $dql = $this->createQueryBuilder('task');
+
+        $dql
+            ->select(['task', 'users', 'customers'])
+            ->leftJoin('task.user', 'users')
+            ->leftJoin('task.customer', 'customers')
+        ;
 
         $dql
             ->andWhere('task.user = :user')
