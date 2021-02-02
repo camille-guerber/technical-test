@@ -25,7 +25,7 @@ class Customer
     private ?string $label = null;
 
     /**
-     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="customer")
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="customer", cascade="remove", orphanRemoval=true)
      */
     private Collection $tasks;
 
