@@ -32,9 +32,11 @@
                             <a href="{{ path('user_edit', {'user': user.id}) }}" class="text-muted">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a href="{{ path('user_delete', {'user': user.id}) }}" class="text-muted">
-                                <i class="fas fa-trash"></i>
-                            </a>
+                            {% if user is not same as(app.user) %}
+                                <a href="{{ path('user_delete', {'user': user.id}) }}" class="text-muted">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% else %}
