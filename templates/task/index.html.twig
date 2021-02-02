@@ -55,7 +55,7 @@
                     <tr>
                         <td>
                             {% if task.user is not null %}
-                                <a href="{{ path('user_edit', {'user': task.user.id}) }}" class="text-muted">
+                                <a href="{{ path('user_edit', {'user': task.user.id}) }}" class="text-primary">
                                     {{ task.user }}
                                 </a>
                             {% else %}
@@ -64,7 +64,7 @@
                         </td>
                         <td>{{ task.label }}</td>
                         <td>
-                            <a href="{{ path('customer_edit', {'customer': task.customer.id}) }}" class="text-muted">
+                            <a href="{{ path('customer_edit', {'customer': task.customer.id}) }}" class="text-primary">
                                 {{ task.customer }}
                             </a>
                         </td>
