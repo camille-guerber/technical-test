@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Task;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -120,6 +121,28 @@ class TaskRepository extends ServiceEntityRepository
                 ->setParameter(':propertyCheck', $unmapped)
             ;
         }
+
+        $dql->orderBy('task.createdAt', 'DESC');
+
+        $query = $dql->getQuery();
+        $query->setMaxResults(10);
+        $query->setFirstResult(($page - 1) * 10);
+
+        return new Paginator($query);
+    }
+
+    /**
+     * @param int $page
+     * @param User $user
+     * @return Paginator
+     */
+    public function getUserTasks(int $page = 1, User $user) {
+        $dql = $this->createQueryBuilder('task');
+
+        $dql
+            ->andWhere('task.user = :user')
+            ->setParameter(':user', $user)
+        ;
 
         $dql->orderBy('task.createdAt', 'DESC');
 
